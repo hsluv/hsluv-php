@@ -23,6 +23,12 @@
 
 class HUSL {
 
+  private static $initialized = false;
+
+  public static function initialize() {
+ 		return;
+  }
+
   private static $m = [
     'R' => [3.2409699419045214, -1.5373831775700935, -0.49861076029300328],
     'G' => [-0.96924363628087983, 1.8759675015077207, 0.041555057407175613],
@@ -166,6 +172,102 @@ class HUSL {
     }
   };
 
+  public static function xyzToRgb ( $tuple ) {
+    $R = self::fromLinear( self::dotProduct( self::$m['R'], $tuple ) );
+    $G = self::fromLinear( self::dotProduct( self::$m['G'], $tuple ) );
+    $B = self::fromLinear( self::dotProduct( self::$m['B'], $tuple ) );
+    return [ $R, $G, $B ];
+  };
+
+  public static function rgbToXyz( $tuple ) {
+    $R = $tuple[0];
+    $G = $tuple[1];
+    $B = $tuple[2];
+
+    $rgbl = [ self::toLinear( $R ), self::toLinear( $G ), self::toLinear( $B ) ];
+    $X = self::dotProduct( self::m_inv['X'], $rgbl);
+    $Y = self::dotProduct( self::m_inv['Y'], $rgbl);
+    $Z = self::dotProduct( self::m_inv['Z'], $rgbl);
+    return [ $X, $Y, $Z ];
+  };
+
+  // http://en.wikipedia.org/wiki/CIELUV
+  // In these formulas, Yn refers to the reference white point. We are using
+  // illuminant D65, so Yn (see refY in Maxima file) equals 1. The formula is
+  // simplified accordingly.
+  private static function Y_to_L( $Y ) {
+    if ( $Y <= self::$epsilon ) {
+      return $Y * self::$kappa;
+    } else {
+      return 116 * pow( $Y, 1 / 3 ) - 16;
+    }
+  };
+  private static function L_to_Y( $L ) {
+    if ( $L <= 8 ) {
+      return $L / self::$kappa;
+    } else {
+      return pow( ( $L + 16 ) / 116, 3 );
+    }
+  };
+
+  public static function xyzToLuv( $tuple ) {
+    $X = $tuple[0];
+    $Y = $tuple[1];
+    $Z = $tuple[2];
+    // Black will create a divide-by-zero error in
+    // the following two lines
+
+    if ( $Y === 0 ) {
+      return [ 0, 0, 0 ];
+    }
+    $L = self::Y_to_L( $Y );
+    $varU = 4 * $X / ( $X + 15 * $Y + 3 * $Z );
+    $varV = 9 * $Y / ( $X + 15 * $Y + 3 * $Z );
+    $U = 13 * $L * ( $varU - $refU );
+    $V = 13 * $L * ( $varV - $refV );
+    return [ $L, $U, $V ];
+  };
+
+  public static function luvToXyz( $tuple ) {
+
+    $L = $tuple[0];
+    $U = $tuple[1];
+    $V = $tuple[2];
+    // Black will create a divide-by-zero error
+
+    if ( $L === 0 ) {
+      return [ 0, 0, 0 ];
+    }
+    $varU = $U / ( 13 * $L ) + $refU;
+    $varV = $V / ( 13 * $L ) + $refV;
+    $Y = self::L_to_Y( $L );
+    $X = 0 - 9 * $Y * $varU / ( ( $varU - 4 ) * $varV - $varU * $varV );
+    $Z = ( 9 * $Y - 15 * $varV * Y - $varV * X ) / ( 3 * $varV );
+    return [ $X, $Y, $Z ];
+  };
+
+  public static function luvToLch( $tuple ) {
+    $L = $tuple[0];
+    $U = $tuple[1];
+    $V = $tuple[2];
+
+    $C = sqrt( pow( $U, 2 ) + pow( $V, 2 ) );
+    // Greys: disambiguate hue
+    if ( $C < 0.00000001 ) {
+      $H = 0;
+    } else {
+      $Hrad = atan2( $V, $U );
+      $H = $Hrad * 360 / 2 / M_PI;
+      if ( $H < 0 ) {
+        $H = 360 + $H;
+      }
+    }
+    return [ $L, $C, $H ];
+  };
+
 }
+
+// Initialize static class
+HUSL::initialize();
 
 ?>
