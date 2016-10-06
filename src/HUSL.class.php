@@ -34,11 +34,11 @@ class HUSL {
     'G' => array(-0.96924363628087983, 1.8759675015077207, 0.041555057407175613),
     'B' => array(0.055630079696993609, -0.20397695888897657, 1.0569715142428786)
   );
-  private static  $m_inv = [
+  private static $m_inv = array(
     'X' => array(0.41239079926595948, 0.35758433938387796, 0.18048078840183429),
     'Y' => array(0.21263900587151036, 0.71516867876775593, 0.072192315360733715),
     'Z' => array(0.019330818715591851, 0.11919477979462599, 0.95053215224966058)
-  ];
+  );
 
   private static $refU = 0.19783000664283681;
   private static $refV = 0.468319994938791;
@@ -52,16 +52,16 @@ class HUSL {
   // push a value out of the RGB gamut
   private static function getBounds( $L ) {
     $sub1 = pow( $L + 16, 3 ) / 1560896;
-    $sub2 = $sub1 > self::$epsilon ? $sub1 : $L / self::$kappa;
+    $sub2 = ( $sub1 > self::$epsilon ? $sub1 : $L / self::$kappa );
     $ret = array();
     $iterable = array('R', 'G', 'B');
 
-    for ( $i = 0; $i < count($iterable); $i++ ) {
+    foreach ( $i = 0; $i < count($iterable); $i++ ) {
       $channel = $iterable[$i];
 
-      $m1 = $m[$channel][0];
-      $m2 = $m[$channel][1];
-      $m3 = $m[$channel][2];
+      $m1 = self::$m[$channel][0];
+      $m2 = self::$m[$channel][1];
+      $m3 = self::$m[$channel][2];
 
       $iterable1 = [0, 1];
       for ($j = 0; $j < count($iterable1); $j++) {
@@ -78,7 +78,7 @@ class HUSL {
   }
 
   private static function intersectLineLine( $line1, $line2 ) {
-    return ( $line1[1] - $line2[1]) / ($line2[0] - $line1[0] );
+    return ( ( $line1[1] - $line2[1] ) / ($line2[0] - $line1[0] ) );
   }
 
   private static function distanceFromPole( $point ) {
@@ -118,7 +118,7 @@ class HUSL {
   private static function maxSafeChromaForL( $L ) {
     $lengths = array();
     $iterable = self::getBounds( $L );
-    for ( $i = 0; $i < count($iterable); $i++) {
+    for ( $i = 0; $i < count($iterable); $i++ ) {
 
       // x where line intersects with perpendicular running though (0, 0)
       $m1 = $iterable[$i][0];
@@ -136,7 +136,7 @@ class HUSL {
     $hrad = $H / 360 * M_PI * 2;
     $lengths = array();
     $iterable = self::getBounds( $L );
-    for ( $i = 0; $i < count($iterable); $i++) {
+    for ( $i = 0; $i < count($iterable); $i++ ) {
       $line = $iterable[$i];
       $l = self::lengthOfRayUntilIntersect( $hrad, $line );
       if ( !is_null($l) ) {
@@ -184,11 +184,14 @@ class HUSL {
     $G = $tuple[1];
     $B = $tuple[2];
 
-    $rgbl = [ self::toLinear( $R ), self::toLinear( $G ), self::toLinear( $B ) ];
-    $X = self::dotProduct( self::m_inv['X'], $rgbl);
-    $Y = self::dotProduct( self::m_inv['Y'], $rgbl);
-    $Z = self::dotProduct( self::m_inv['Z'], $rgbl);
-    return array( $X, $Y, $Z );
+    $rgbl = array( self::toLinear( $R ), self::toLinear( $G ), self::toLinear( $B ) );
+
+    $X = self::dotProduct( self::$m_inv['X'], $rgbl );
+    $Y = self::dotProduct( self::$m_inv['Y'], $rgbl );
+    $Z = self::dotProduct( self::$m_inv['Z'], $rgbl );
+
+    $XYZ = array( $X, $Y, $Z );
+    return $XYZ;
   }
 
   // http://en.wikipedia.org/wiki/CIELUV
@@ -201,7 +204,7 @@ class HUSL {
     } else {
       return 116 * pow( $Y, 1 / 3 ) - 16;
     }
-  };
+  }
   private static function L_to_Y( $L ) {
     if ( $L <= 8 ) {
       return $L / self::$kappa;
@@ -217,14 +220,14 @@ class HUSL {
     // Black will create a divide-by-zero error in
     // the following two lines
 
-    if ( $Y === 0 ) {
+    if ( $Y == 0 ) {
       return array( 0, 0, 0 );
     }
     $L = self::Y_to_L( $Y );
     $varU = 4 * $X / ( $X + 15 * $Y + 3 * $Z );
     $varV = 9 * $Y / ( $X + 15 * $Y + 3 * $Z );
-    $U = 13 * $L * ( $varU - $refU );
-    $V = 13 * $L * ( $varV - $refV );
+    $U = 13 * $L * ( $varU - self::$refU );
+    $V = 13 * $L * ( $varV - self::$refV );
     return array( $L, $U, $V );
   }
 
@@ -234,11 +237,11 @@ class HUSL {
     $V = $tuple[2];
     // Black will create a divide-by-zero error
 
-    if ( $L === 0 ) {
+    if ( $L == 0 ) {
       return array( 0, 0, 0 );
     }
-    $varU = $U / ( 13 * $L ) + $refU;
-    $varV = $V / ( 13 * $L ) + $refV;
+    $varU = $U / ( 13 * $L ) + self::$refU;
+    $varV = $V / ( 13 * $L ) + self::$refV;
     $Y = self::L_to_Y( $L );
     $X = 0 - 9 * $Y * $varU / ( ( $varU - 4 ) * $varV - $varU * $varV );
     $Z = ( 9 * $Y - 15 * $varV * Y - $varV * X ) / ( 3 * $varV );
@@ -396,7 +399,7 @@ class HUSL {
     $husl = array( $H, $S, $L );
     return self::huslToRgb( $husl );
   }
-  public static function toHex(H, S, L) {
+  public static function toHex( $H, $S, $L ) {
     $husl = array( $H, $S, $L );
     return self::rgbToHex( self::huslToRgb( $husl ) );
   }

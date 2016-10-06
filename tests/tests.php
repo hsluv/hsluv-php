@@ -2,6 +2,7 @@
 
   require '../src/HUSL.class.php';
 
-  $husl = HUSL::fromHex( '#FABADA' );
+  $out = HUSL::rgbToXyz( array(250, 186, 218) );
+  var_dump( $out );
 
 ?>
