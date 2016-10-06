@@ -385,6 +385,37 @@ class HUSL {
     return self::lchToHuslp( self::rgbToLch( $tuple ) );
   }
 
+  public static function fromRGB( $R, $G, $B ) {
+    $rgb = array( $R, $G, $B );
+    return self::rgbToHusl( $rgb );
+  }
+  public static function fromHex( $hex ) {
+    return self::rgbToHusl( self::hexToRgb( $hex ) );
+  }
+  public static function toRGB( $H, $S, $L ) {
+    $husl = array( $H, $S, $L );
+    return self::huslToRgb( $husl );
+  }
+  public static function toHex(H, S, L) {
+    $husl = array( $H, $S, $L );
+    return self::rgbToHex( self::huslToRgb( $husl ) );
+  }
+  public static function p_toRGB( $H, $S, $L ) {
+    $husl = array( $H, $S, $L );
+    return self::xyzToRgb( self::luvToXyz( self::lchToLuv( self::huslpToLch( $husl ) ) ) );
+  }
+  public static function p_toHex( $H, $S, $L ) {
+    $husl = array( $H, $S, $L );
+    return self::rgbToHex( self::xyzToRgb( self::luvToXyz( self::lchToLuv( self::huslpToLch( $husl ) ) ) ) );
+  }
+  public static function p_fromRGB( $R, $G, $B ) {
+    $rgb = array( $R, $G, $B );
+    return self::lchToHuslp( self::luvToLch( self::xyzToLuv( self::rgbToXyz( $rgb ) ) ) );
+  }
+  public static function p_fromHex( $hex ) {
+    return self::lchToHuslp( self::luvToLch( self::xyzToLuv( self::rgbToXyz( self::hexToRgb( $hex ) ) ) ) );
+  }
+
 }
 
 // Initialize static class
