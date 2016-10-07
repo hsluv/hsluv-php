@@ -11,12 +11,15 @@ Include the class in your project.
 # From rgb / hex to HUSL
 
 ````php
+// From hex
 $out = HUSL::fromHex( '#fabada' );
 $out = HUSL::fromHex( '#FABADA' );
+
+// From rgb (int) in 0 - 255 range
 $out = HUSL::fromRgb( 250, 186, 218 );
 $out = HUSL::fromRgb( 250.0, 186.0, 218.0 );
 $out = HUSL::fromRgb( array( 250, 186, 218 ) );
-$out = HUSL::fromRgb( array(250.0, 186.0, 218.0 ) );
+$out = HUSL::fromRgb( array( 250.0, 186.0, 218.0 ) );
 ````
 
 Returns HUSL an array of **float** values ( H, S, L ).
@@ -26,8 +29,11 @@ Returns HUSL an array of **float** values ( H, S, L ).
 Parameters are float H, S, L componets or an array.
 
 ```php
+// rgb output
 $out = HUSL::toRgb( $h, $s, $l )
 $out = HUSL::toRgb( array( $h, $s, $l ) )
+
+// hex output
 $out = HUSL::toHex( $h, $s, $l )
 $out = HUSL::toRgb( array( $h, $s, $l ) )
 ```
