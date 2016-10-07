@@ -42,5 +42,5 @@ Returns lowercase string for **hex** and array of **int** (0-255 range) for **rg
 
 # Authors
 
-- Carlos Cabo ([carloscabo](https://github.com/carloscabo))
+- Port by Carlos Cabo ([carloscabo](https://github.com/carloscabo))
 - Original HUSL author: Alexei Boronine ([boronine](http://github.com/boronine))
