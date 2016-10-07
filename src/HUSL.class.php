@@ -54,22 +54,20 @@ class HUSL {
     $sub1 = pow( $L + 16, 3 ) / 1560896;
     $sub2 = ( $sub1 > self::$epsilon ? $sub1 : $L / self::$kappa );
     $ret = array();
-    $iterable = array('R', 'G', 'B');
 
-    foreach ( $i = 0; $i < count($iterable); $i++ ) {
-      $channel = $iterable[$i];
+    $components = array('R', 'G', 'B');
 
+    foreach ( $components as $channel ) {
       $m1 = self::$m[$channel][0];
       $m2 = self::$m[$channel][1];
       $m3 = self::$m[$channel][2];
 
-      $iterable1 = [0, 1];
-      for ($j = 0; $j < count($iterable1); $j++) {
+      $binary = array( 0, 1 );
 
-        $t = $iterable1[$j];
+      foreach ( $binary as $digit ) {
         $top1 = (284517 * $m1 - 94839 * $m3) * $sub2;
-        $top2 = (838422 * $m3 + 769860 * $m2 + 731718 * $m1) * $L * $sub2 - 769860 * $t * $L;
-        $bottom = (632260 * $m3 - 126452 * $m2) * $sub2 + 126452 * $t;
+        $top2 = (838422 * $m3 + 769860 * $m2 + 731718 * $m1) * $L * $sub2 - 769860 * $digit * $L;
+        $bottom = (632260 * $m3 - 126452 * $m2) * $sub2 + 126452 * $digit;
 
         $ret[] = array( $top1 / $bottom, $top2 / $bottom );
       }
@@ -362,61 +360,81 @@ class HUSL {
         $g = hexdec( substr( $hex,2,2 ) );
         $b = hexdec( substr( $hex,4,2 ) );
      }
-     $rgb = array( $r, $g, $b );
+     $rgb = array( $r / 255.0, $g / 255.0, $b / 255.0 );
 
      return $rgb; // returns an array with the rgb values
   }
 
   // Helper functions
 
-  public static function lchToRgb( $tuple ) {
+  public static function lchToRgb( ) {
+    $tuple = self::componentsToTuple( func_get_args() );
     return self::xyzToRgb( self::luvToXyz( self::lchToLuv( $tuple ) ) );
   }
-  public static function rgbToLch( $tuple ) {
+  public static function rgbToLch( ) {
+    $tuple = self::componentsToTuple( func_get_args() );
     return self::luvToLch( self::xyzToLuv( self::rgbToXyz( $tuple ) ) );
   }
-  public static function huslToRgb( $tuple ) {
+  public static function huslToRgb( ) {
+    $tuple = self::componentsToTuple( func_get_args() );
     return self::lchToRgb( self::huslToLch( $tuple ) );
   }
-  public static function rgbToHusl( $tuple ) {
+  public static function rgbToHusl( ) {
+    $tuple = self::componentsToTuple( func_get_args() );
     return self::lchToHusl( self::rgbToLch( $tuple ) );
   }
-  public static function huslpToRgb( $tuple ) {
+  public static function huslpToRgb( ) {
+    $tuple = self::componentsToTuple( func_get_args() );
     return self::lchToRgb( self::huslpToLch( $tuple ) );
   }
-  public static function rgbToHuslp( $tuple ) {
+  public static function rgbToHuslp( ) {
+    $tuple = self::componentsToTuple( func_get_args() );
     return self::lchToHuslp( self::rgbToLch( $tuple ) );
   }
 
-  public static function fromRGB( $R, $G, $B ) {
-    $rgb = array( $R, $G, $B );
-    return self::rgbToHusl( $rgb );
+  public static function fromRGB( ) {
+    $rgb = self::componentsToTuple( func_get_args() );
+    $rgb_norm = array_map( function($val) { return $val / 255.0; }, $rgb);
+    var_dump($rgb_norm);
+    echo '<br>';
+    return self::rgbToHusl( $rgb_norm );
   }
   public static function fromHex( $hex ) {
+    var_dump( self::hexToRgb( $hex ) );
+    echo '<br>';
     return self::rgbToHusl( self::hexToRgb( $hex ) );
   }
-  public static function toRGB( $H, $S, $L ) {
-    $husl = array( $H, $S, $L );
+  public static function toRGB( ) {
+    $husl = self::componentsToTuple( func_get_args() );
     return self::huslToRgb( $husl );
   }
-  public static function toHex( $H, $S, $L ) {
-    $husl = array( $H, $S, $L );
+  public static function toHex( ) {
+    $husl = self::componentsToTuple( func_get_args() );
     return self::rgbToHex( self::huslToRgb( $husl ) );
   }
-  public static function p_toRGB( $H, $S, $L ) {
-    $husl = array( $H, $S, $L );
+  public static function p_toRGB( ) {
+    $husl = self::componentsToTuple( func_get_args() );
     return self::xyzToRgb( self::luvToXyz( self::lchToLuv( self::huslpToLch( $husl ) ) ) );
   }
-  public static function p_toHex( $H, $S, $L ) {
-    $husl = array( $H, $S, $L );
+  public static function p_toHex( ) {
+    $husl = self::componentsToTuple( func_get_args() );
     return self::rgbToHex( self::xyzToRgb( self::luvToXyz( self::lchToLuv( self::huslpToLch( $husl ) ) ) ) );
   }
-  public static function p_fromRGB( $R, $G, $B ) {
-    $rgb = array( $R, $G, $B );
+  public static function p_fromRGB( ) {
+    $rgb = self::componentsToTuple( func_get_args() );
     return self::lchToHuslp( self::luvToLch( self::xyzToLuv( self::rgbToXyz( $rgb ) ) ) );
   }
   public static function p_fromHex( $hex ) {
     return self::lchToHuslp( self::luvToLch( self::xyzToLuv( self::rgbToXyz( self::hexToRgb( $hex ) ) ) ) );
+  }
+
+  // Convert multiple components into an array
+  private static function componentsToTuple ( $components ) {
+    if( is_array($components[0]) ) {
+      return $components[0];
+    } else {
+      return array( $components[0], $components[1], $components[2] );
+    }
   }
 
 }
