@@ -14,4 +14,10 @@
   var_dump( $out );
   echo '<br>';
 
+  echo '----------------------------------------<br>';
+  var_dump( HUSL::toRgb( $out ) );
+  echo '<br>';
+  var_dump( HUSL::toHex( $out ) );
+  echo '<br>';
+
 ?>

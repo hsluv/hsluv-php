@@ -242,7 +242,7 @@ class HUSL {
     $varV = $V / ( 13 * $L ) + self::$refV;
     $Y = self::L_to_Y( $L );
     $X = 0 - 9 * $Y * $varU / ( ( $varU - 4 ) * $varV - $varU * $varV );
-    $Z = ( 9 * $Y - 15 * $varV * Y - $varV * X ) / ( 3 * $varV );
+    $Z = ( 9 * $Y - 15 * $varV * $Y - $varV * $X ) / ( 3 * $varV );
     return array( $X, $Y, $Z );
   }
 
@@ -339,16 +339,17 @@ class HUSL {
   }
 
   // From https://gist.github.com/Pushplaybang/5432844
-  public static function rgb2Hex( $rgb ) {
-     $hex = "#";
-     $hex .= str_pad( dechex( $rgb[0] ), 2, "0", STR_PAD_LEFT);
-     $hex .= str_pad( dechex( $rgb[1] ), 2, "0", STR_PAD_LEFT);
-     $hex .= str_pad( dechex( $rgb[2] ), 2, "0", STR_PAD_LEFT);
+  public static function rgbToHex( $rgb ) {
+    $rgb_unnorm = array_map( function($val) { return $val * 255.0; }, $rgb);
+    $hex = "#";
+    $hex .= str_pad( dechex( $rgb_unnorm[0] ), 2, "0", STR_PAD_LEFT);
+    $hex .= str_pad( dechex( $rgb_unnorm[1] ), 2, "0", STR_PAD_LEFT);
+    $hex .= str_pad( dechex( $rgb_unnorm[2] ), 2, "0", STR_PAD_LEFT);
 
-     return $hex; // returns the hex value including the number sign (#)
+    return $hex; // returns the hex value including the number sign (#)
   }
 
-  public static function hexTorgb( $hex ) {
+  public static function hexToRgb( $hex ) {
      $hex = str_replace("#", "", $hex);
 
      if( strlen( $hex ) == 3 ) {
@@ -395,13 +396,9 @@ class HUSL {
   public static function fromRGB( ) {
     $rgb = self::componentsToTuple( func_get_args() );
     $rgb_norm = array_map( function($val) { return $val / 255.0; }, $rgb);
-    var_dump($rgb_norm);
-    echo '<br>';
     return self::rgbToHusl( $rgb_norm );
   }
   public static function fromHex( $hex ) {
-    var_dump( self::hexToRgb( $hex ) );
-    echo '<br>';
     return self::rgbToHusl( self::hexToRgb( $hex ) );
   }
   public static function toRGB( ) {
