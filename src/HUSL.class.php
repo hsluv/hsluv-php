@@ -403,7 +403,9 @@ class HUSL {
   }
   public static function toRGB( ) {
     $husl = self::componentsToTuple( func_get_args() );
-    return self::huslToRgb( $husl );
+    $rgb = self::huslToRgb( $husl );
+    $rgb_255 = array_map( function($val) { return intval( round( $val * 255.0 ) ); }, $rgb);
+    return $rgb_255;
   }
   public static function toHex( ) {
     $husl = self::componentsToTuple( func_get_args() );
