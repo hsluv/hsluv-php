@@ -23,24 +23,24 @@
 
 class HUSL
 {
-    private static $m = [
+    const M = [
         'R' => array(3.2409699419045214, -1.5373831775700935, -0.49861076029300328),
         'G' => array(-0.96924363628087983, 1.8759675015077207, 0.041555057407175613),
         'B' => array(0.055630079696993609, -0.20397695888897657, 1.0569715142428786),
     ];
 
-    private static $m_inv = array(
+    const M_INV = array(
         'X' => array(0.41239079926595948, 0.35758433938387796, 0.18048078840183429),
         'Y' => array(0.21263900587151036, 0.71516867876775593, 0.072192315360733715),
         'Z' => array(0.019330818715591851, 0.11919477979462599, 0.95053215224966058)
     );
 
-    private static $refU = 0.19783000664283681;
-    private static $refV = 0.468319994938791;
+    const REF_U = 0.19783000664283681;
+    const REF_V = 0.468319994938791;
 
     // CIE LUV constants
-    private static $kappa = 903.2962962962963;
-    private static $epsilon = 0.0088564516790356308;
+    const KAPPA = 903.2962962962963;
+    const EPSILLON = 0.0088564516790356308;
 
     /**
      * For a given lightness, return a list of 6 lines in slope-intercept
@@ -53,14 +53,14 @@ class HUSL
     private static function getBounds($L)
     {
         $sub1 = pow($L + 16, 3) / 1560896;
-        $sub2 = ($sub1 > self::$epsilon ? $sub1 : $L / self::$kappa);
+        $sub2 = ($sub1 > self::EPSILLON ? $sub1 : $L / self::KAPPA);
         $ret = array();
         $components = array('R', 'G', 'B');
 
         foreach ($components as $channel) {
-            $m1 = self::$m[$channel][0];
-            $m2 = self::$m[$channel][1];
-            $m3 = self::$m[$channel][2];
+            $m1 = self::M[$channel][0];
+            $m2 = self::M[$channel][1];
+            $m3 = self::M[$channel][2];
 
             $binary = array( 0, 1 );
 
@@ -198,9 +198,9 @@ class HUSL
 
     public static function xyzToRgb($tuple)
     {
-        $R = self::fromLinear(self::dotProduct(self::$m['R'], $tuple));
-        $G = self::fromLinear(self::dotProduct(self::$m['G'], $tuple));
-        $B = self::fromLinear(self::dotProduct(self::$m['B'], $tuple));
+        $R = self::fromLinear(self::dotProduct(self::M['R'], $tuple));
+        $G = self::fromLinear(self::dotProduct(self::M['G'], $tuple));
+        $B = self::fromLinear(self::dotProduct(self::M['B'], $tuple));
 
         return array( $R, $G, $B );
     }
@@ -213,9 +213,9 @@ class HUSL
 
         $rgbl = array( self::toLinear($R), self::toLinear($G), self::toLinear($B) );
 
-        $X = self::dotProduct(self::$m_inv['X'], $rgbl);
-        $Y = self::dotProduct(self::$m_inv['Y'], $rgbl);
-        $Z = self::dotProduct(self::$m_inv['Z'], $rgbl);
+        $X = self::dotProduct(self::M_INV['X'], $rgbl);
+        $Y = self::dotProduct(self::M_INV['Y'], $rgbl);
+        $Z = self::dotProduct(self::M_INV['Z'], $rgbl);
 
         $XYZ = array( $X, $Y, $Z );
 
@@ -233,8 +233,8 @@ class HUSL
      */
     private static function Y_to_L($Y)
     {
-        if ($Y <= self::$epsilon) {
-            return $Y * self::$kappa;
+        if ($Y <= self::EPSILLON) {
+            return $Y * self::KAPPA;
         } else {
             return 116 * pow($Y, 1 / 3) - 16;
         }
@@ -243,7 +243,7 @@ class HUSL
     private static function L_to_Y($L)
     {
         if ($L <= 8) {
-            return $L / self::$kappa;
+            return $L / self::KAPPA;
         } else {
             return pow(($L + 16) / 116, 3);
         }
@@ -264,8 +264,8 @@ class HUSL
         $L = self::Y_to_L($Y);
         $varU = 4 * $X / ($X + 15 * $Y + 3 * $Z);
         $varV = 9 * $Y / ($X + 15 * $Y + 3 * $Z);
-        $U = 13 * $L * ($varU - self::$refU);
-        $V = 13 * $L * ($varV - self::$refV);
+        $U = 13 * $L * ($varU - self::REF_U);
+        $V = 13 * $L * ($varV - self::REF_V);
 
         return array( $L, $U, $V );
     }
@@ -281,8 +281,8 @@ class HUSL
             return array( 0, 0, 0 );
         }
 
-        $varU = $U / (13 * $L) + self::$refU;
-        $varV = $V / (13 * $L) + self::$refV;
+        $varU = $U / (13 * $L) + self::REF_U;
+        $varV = $V / (13 * $L) + self::REF_V;
         $Y = self::L_to_Y($L);
         $X = 0 - 9 * $Y * $varU / (($varU - 4) * $varV - $varU * $varV);
         $Z = (9 * $Y - 15 * $varV * $Y - $varV * $X) / (3 * $varV);
