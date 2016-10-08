@@ -1,5 +1,7 @@
 <?php
 
+namespace HUSL;
+
 /**
   Port of HUSL Color library to PHP by Carlos Cabo.
   https://github.com/husl-colors

@@ -1,6 +1,6 @@
 <?php
 
-  require '../src/HUSL.class.php';
+  require '../src/HUSL.php';
 
   $out = HUSL::fromHex( '#fabada' );
   var_dump( $out );
