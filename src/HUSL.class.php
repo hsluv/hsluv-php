@@ -1,6 +1,6 @@
 <?php
 
-/*
+/**
   Port of HUSL Color library to PHP by Carlos Cabo.
   https://github.com/husl-colors
 
@@ -42,9 +42,14 @@ class HUSL
     private static $kappa = 903.2962962962963;
     private static $epsilon = 0.0088564516790356308;
 
-    // For a given lightness, return a list of 6 lines in slope-intercept
-    // form that represent the bounds in CIELUV, stepping over which will
-    // push a value out of the RGB gamut
+    /**
+     * For a given lightness, return a list of 6 lines in slope-intercept
+     * form that represent the bounds in CIELUV, stepping over which will
+     * push a value out of the RGB gamut
+     *
+     * @param mixed $L
+     * @return array
+     */
     private static function getBounds($L)
     {
         $sub1 = pow($L + 16, 3) / 1560896;
@@ -81,22 +86,27 @@ class HUSL
         return sqrt(pow($point[0], 2) + pow($point[1], 2));
     }
 
-    // theta  -- angle of ray starting at (0, 0)
-    // m, b   -- slope and intercept of line
-    // x1, y1 -- coordinates of intersection
-    // len    -- length of ray until it intersects with line
-    //
-    // b + m * x1        = y1
-    // len              >= 0
-    // len * cos(theta)  = x1
-    // len * sin(theta)  = y1
-    //
-    //
-    // b + m * (len * cos(theta)) = len * sin(theta)
-    // b = len * sin(hrad) - m * len * cos(theta)
-    // b = len * (sin(hrad) - m * cos(hrad))
-    // len = b / (sin(hrad) - m * cos(hrad))
-    //
+    /**
+     * theta  -- angle of ray starting at (0, 0)
+     * m, b   -- slope and intercept of line
+     * x1, y1 -- coordinates of intersection
+     * len    -- length of ray until it intersects with line
+     *
+     * b + m * x1        = y1
+     * len              >= 0
+     * len * cos(theta)  = x1
+     * len * sin(theta)  = y1
+     *
+     *
+     * b + m * (len * cos(theta)) = len * sin(theta)
+     * b = len * sin(hrad) - m * len * cos(theta)
+     * b = len * (sin(hrad) - m * cos(hrad))
+     * len = b / (sin(hrad) - m * cos(hrad))
+     *
+     * @param mixed $theta
+     * @param mixed $line
+     * @return float|int|null
+     */
     private static function lengthOfRayUntilIntersect($theta, $line)
     {
         $m1 = $line[0];
@@ -110,9 +120,14 @@ class HUSL
         return $len;
     }
 
-    // For given lightness, returns the maximum chroma. Keeping the chroma value
-    // below this number will ensure that for any hue, the color is within the RGB
-    // gamut.
+    /**
+     * For given lightness, returns the maximum chroma. Keeping the chroma value
+     * below this number will ensure that for any hue, the color is within the RGB
+     * gamut.
+     *
+     * @param mixed $L
+     * @return mixed
+     */
     private static function maxSafeChromaForL($L)
     {
         $lengths = array();
@@ -128,8 +143,14 @@ class HUSL
         return min($lengths);
     }
 
-    // For a given lightness and hue, return the maximum chroma that fits in
-    // the RGB gamut.
+    /**
+     * For a given lightness and hue, return the maximum chroma that fits in
+     * the RGB gamut.
+     *
+     * @param mixed $L
+     * @param mixed $H
+     * @return mixed
+     */
     private static function maxChromaForLH($L, $H)
     {
         $hrad = $H / 360 * M_PI * 2;
@@ -201,10 +222,15 @@ class HUSL
         return $XYZ;
     }
 
-    // http://en.wikipedia.org/wiki/CIELUV
-    // In these formulas, Yn refers to the reference white point. We are using
-    // illuminant D65, so Yn (see refY in Maxima file) equals 1. The formula is
-    // simplified accordingly.
+    /**
+     * http://en.wikipedia.org/wiki/CIELUV
+     * In these formulas, Yn refers to the reference white point. We are using
+     * illuminant D65, so Yn (see refY in Maxima file) equals 1. The formula is
+     * simplified accordingly.
+     *
+     * @param mixed $Y
+     * @return mixed
+     */
     private static function Y_to_L($Y)
     {
         if ($Y <= self::$epsilon) {
