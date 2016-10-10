@@ -1,6 +1,7 @@
 <?php
 
-  require '../src/HUSL.php';
+  require '../src/HUSL/HUSL.php';
+  use HUSL\HUSL;
 
   $out = HUSL::fromHex( '#fabada' );
   var_dump( $out );
@@ -10,19 +11,23 @@
   var_dump( $out );
   echo '<br>';
 
-  $out = HUSL::fromRgb( 250, 186, 218 );
+  $out = HUSL::fromRgb( 0.9803921568627451, 0.7294117647058823, 0.8549019607843137 );
   var_dump( $out );
   echo '<br>';
 
-  $out = HUSL::fromRgb( 250.0, 186.0, 218.0 );
+  $out = HUSL::fromRgb( array( 0.9803921568627451, 0.7294117647058823, 0.8549019607843137 ) );
   var_dump( $out );
   echo '<br>';
 
-  $out = HUSL::fromRgb( array( 250, 186, 218 ) );
+  $out = HUSL::fromRgbInt( 250.0, 186.0, 218.0 );
   var_dump( $out );
   echo '<br>';
 
-  $out = HUSL::fromRgb( array(250.0, 186.0, 218.0 ) );
+  $out = HUSL::fromRgbInt( array( 250, 186, 218 ) );
+  var_dump( $out );
+  echo '<br>';
+
+  $out = HUSL::fromRgbInt( array(250.0, 186.0, 218.0 ) );
   var_dump( $out );
   echo '<br>';
 
@@ -32,6 +37,10 @@
   var_dump( HUSL::toRgb( $husl ) );
   echo '<br>';
   var_dump( HUSL::toRgb( $husl[0], $husl[1], $husl[2] ) );
+  echo '<br>';
+  var_dump( HUSL::toRgbInt( $husl ) );
+  echo '<br>';
+  var_dump( HUSL::toRgbInt( $husl[0], $husl[1], $husl[2] ) );
   echo '<br>';
   var_dump( HUSL::toHex( $husl ) );
   echo '<br>';

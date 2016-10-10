@@ -9,7 +9,7 @@ class HUSLTest extends TestCase
 
     protected function setUp()
     {
-        $str = file_get_contents('tests/snapshot-rev3.json');
+        $str = file_get_contents('tests/snapshot-rev4.json');
         $json = json_decode($str, true);
         $this->battery = $json;
     }
@@ -17,7 +17,7 @@ class HUSLTest extends TestCase
     public function testCorrectHuslFromRgb()
     {
         foreach ($this->battery as $hex => $values) {
-            $this->assertEquals(HUSL::fromRGB($values['rgb'][0], $values['rgb'][1], $values['rgb'][2]), $values['husl']);
+            $this->assertEquals(HUSL::fromRgb($values['rgb'][0], $values['rgb'][1], $values['rgb'][2]), $values['husl']);
         }
     }
 
@@ -31,7 +31,7 @@ class HUSLTest extends TestCase
     public function testCorrectRgbFromHusl()
     {
         foreach ($this->battery as $hex => $values) {
-            $this->assertEquals(HUSL::toRGB($values['husl']), $values['rgb']);
+            $this->assertEquals(HUSL::toRgb($values['husl']), $values['rgb']);
         }
     }
 

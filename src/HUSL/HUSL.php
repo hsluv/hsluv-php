@@ -3,8 +3,8 @@
 namespace HUSL;
 
 /**
-  Port of HUSL Color library to PHP by Carlos Cabo.
-  https://github.com/husl-colors
+  Port of HUSL Color library to PHP by Carlos Cabo. V.1.0.0
+  Original by Alexei Boronine. https://github.com/husl-colors
 
   The math for most of this module was taken from:
 
@@ -398,7 +398,7 @@ class HUSL
     public static function rgbToHex($rgb)
     {
         $rgb_unnorm = array_map(function ($val) {
-            return $val * 255.0;
+            return intval(round($val * 255.0));
         }, $rgb);
 
         $hex = "#";
@@ -471,14 +471,20 @@ class HUSL
         return self::lchToHuslp(self::rgbToLch($tuple));
     }
 
-    public static function fromRGB()
+    public static function fromRgb()
     {
         $rgb = self::componentsToTuple(func_get_args());
-        $rgb_norm = array_map(function ($val) {
-            return $val / 255.0;
-        }, $rgb);
+        return self::rgbToHusl($rgb);
+    }
 
-        return self::rgbToHusl($rgb_norm);
+    public static function fromRgbInt()
+    {
+        $rgb_255 = self::componentsToTuple(func_get_args());
+        $rgb = array();
+        $rgb = array_map(function ($val) {
+            return $val / 255.0;
+        }, $rgb_255);
+        return self::rgbToHusl($rgb);
     }
 
     public static function fromHex($hex)
@@ -486,10 +492,19 @@ class HUSL
         return self::rgbToHusl(self::hexToRgb($hex));
     }
 
-    public static function toRGB()
+    public static function toRgb()
     {
         $husl = self::componentsToTuple(func_get_args());
         $rgb = self::huslToRgb($husl);
+
+        return $rgb;
+    }
+
+    public static function toRgbInt()
+    {
+        $husl = self::componentsToTuple(func_get_args());
+        $rgb = self::huslToRgb($husl);
+        $rgb_255 = array();
         $rgb_255 = array_map(function ($val) {
             return intval(round($val * 255.0));
         }, $rgb);
@@ -504,7 +519,7 @@ class HUSL
         return self::rgbToHex(self::huslToRgb($husl));
     }
 
-    public static function p_toRGB()
+    public static function p_toRgb()
     {
         $husl = self::componentsToTuple(func_get_args());
 
@@ -518,7 +533,7 @@ class HUSL
         return self::rgbToHex(self::xyzToRgb(self::luvToXyz(self::lchToLuv(self::huslpToLch($husl)))));
     }
 
-    public static function p_fromRGB()
+    public static function p_fromRgb()
     {
         $rgb = self::componentsToTuple(func_get_args());
 

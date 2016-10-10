@@ -15,15 +15,19 @@ Include the class in your project.
 # From rgb / hex to HUSL
 
 ````php
-// From hex
+// From hex upper / lowercase
 $out = HUSL::fromHex( '#fabada' );
 $out = HUSL::fromHex( '#FABADA' );
 
+// From rgb (float) in 0.0 - 1.0 range
+$out = HUSL::fromRgb( 0.9803921568627451, 0.7294117647058823, 0.8549019607843137 );
+$out = HUSL::fromRgb( array( 0.9803921568627451, 0.7294117647058823, 0.8549019607843137 ) );
+
 // From rgb (int) in 0 - 255 range
-$out = HUSL::fromRgb( 250, 186, 218 );
-$out = HUSL::fromRgb( 250.0, 186.0, 218.0 );
-$out = HUSL::fromRgb( array( 250, 186, 218 ) );
-$out = HUSL::fromRgb( array( 250.0, 186.0, 218.0 ) );
+$out = HUSL::fromRgbInt( 250, 186, 218 );
+$out = HUSL::fromRgbInt( 250.0, 186.0, 218.0 );
+$out = HUSL::fromRgbInt( array( 250, 186, 218 ) );
+$out = HUSL::fromRgbInt( array( 250.0, 186.0, 218.0 ) );
 ````
 
 Returns HUSL an array of **float** values ( H, S, L ).
@@ -33,18 +37,21 @@ Returns HUSL an array of **float** values ( H, S, L ).
 Parameters are float H, S, L componets or an array.
 
 ```php
-// rgb output
+// Rgb: returns array of (float) in 0.0 - 1.0 range
 $out = HUSL::toRgb( $h, $s, $l )
 $out = HUSL::toRgb( array( $h, $s, $l ) )
 
-// hex output
+// Rgb: returns array if (int) in 0 - 255 range
+$out = HUSL::toRgbInt( $h, $s, $l )
+$out = HUSL::toRgbInt( array( $h, $s, $l ) )
+
+// Hex: returns lowercase string including "#"
 $out = HUSL::toHex( $h, $s, $l )
 $out = HUSL::toRgb( array( $h, $s, $l ) )
 ```
 
-Returns lowercase string for **hex** and array of **int** (0-255 range) for **rgb**.
-
 # Authors
 
 - Port by Carlos Cabo ([carloscabo](https://github.com/carloscabo))
+- Support with test and packaging ([codewrong](https://github.com/codewrong))
 - Original HUSL author: Alexei Boronine ([boronine](http://github.com/boronine))
