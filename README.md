@@ -2,7 +2,7 @@
 
 [![Build Status](https://travis-ci.org/carloscabo/husl-php-class.svg?branch=master)](https://travis-ci.org/carloscabo/husl-php-class)
 
-A port fron Python / JS of [HUSL](http://www.husl-colors.org/) (revision 3) .
+A port to PHP (5.6+) from Python / JS of [HUSL](http://www.husl-colors.org/) (revision 3) .
 
 To run the tests:
 ```
@@ -55,5 +55,5 @@ $out = HUSL::toRgb( array( $h, $s, $l ) )
 # Authors
 
 - Port by Carlos Cabo ([carloscabo](https://github.com/carloscabo))
-- Support with test and packaging ([codewrong](https://github.com/codewrong))
+- Support with tests and packaging ([codewrong](https://github.com/codewrong))
 - Original HUSL author: Alexei Boronine ([boronine](http://github.com/boronine))
