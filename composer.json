@@ -1,7 +1,18 @@
 {
-  "name": "carloscabo/husl-php-class",
-  "description": "Port",
+  "name": "carloscabo/husl",
+  "type": "library",
+  "description": "HUSL / rgb / hex color conversion library",
+  "keywords": ["HUSL","color"],
+  "homepage": "https://github.com/carloscabo/husl-php-class",
   "minimum-stability": "dev",
+  "authors": [
+    {
+      "name": "Carlos Cabo",
+      "email": "carloscabo@gmail.com",
+      "homepage": "http://carloscabo.com",
+      "role": "Developer"
+    }
+  ],
   "license": "MIT",
   "autoload": {
     "psr-4": {
