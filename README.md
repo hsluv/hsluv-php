@@ -2,7 +2,11 @@
 
 A port fron Python / JS of [HUSL](http://www.husl-colors.org/) (revision 3).
 
-**WARNING: Tests are still not integrated**
+To run the tests:
+```
+composer install
+./vendor/bin/phpunit
+```
 
 # Usage
 
