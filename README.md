@@ -12,7 +12,9 @@ composer install
 
 # Usage
 
-Include the class in your project.
+```
+composer require "carloscabo/husl"
+```
 
 # From rgb / hex to HUSL
 

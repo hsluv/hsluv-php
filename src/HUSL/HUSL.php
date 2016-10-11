@@ -26,16 +26,16 @@ namespace HUSL;
 class HUSL
 {
     const M = [
-        'R' => array(3.2409699419045214, -1.5373831775700935, -0.49861076029300328),
-        'G' => array(-0.96924363628087983, 1.8759675015077207, 0.041555057407175613),
-        'B' => array(0.055630079696993609, -0.20397695888897657, 1.0569715142428786),
+        'R' => [3.2409699419045214, -1.5373831775700935, -0.49861076029300328],
+        'G' => [-0.96924363628087983, 1.8759675015077207, 0.041555057407175613],
+        'B' => [0.055630079696993609, -0.20397695888897657, 1.0569715142428786],
     ];
 
-    const M_INV = array(
-        'X' => array(0.41239079926595948, 0.35758433938387796, 0.18048078840183429),
-        'Y' => array(0.21263900587151036, 0.71516867876775593, 0.072192315360733715),
-        'Z' => array(0.019330818715591851, 0.11919477979462599, 0.95053215224966058)
-    );
+    const M_INV = [
+        'X' => [0.41239079926595948, 0.35758433938387796, 0.18048078840183429],
+        'Y' => [0.21263900587151036, 0.71516867876775593, 0.072192315360733715],
+        'Z' => [0.019330818715591851, 0.11919477979462599, 0.95053215224966058],
+    ];
 
     const REF_U = 0.19783000664283681;
     const REF_V = 0.468319994938791;
@@ -56,22 +56,22 @@ class HUSL
     {
         $sub1 = pow($L + 16, 3) / 1560896;
         $sub2 = ($sub1 > self::EPSILLON ? $sub1 : $L / self::KAPPA);
-        $ret = array();
-        $components = array('R', 'G', 'B');
+        $ret = [];
+        $components = ['R', 'G', 'B'];
 
         foreach ($components as $channel) {
             $m1 = self::M[$channel][0];
             $m2 = self::M[$channel][1];
             $m3 = self::M[$channel][2];
 
-            $binary = array( 0, 1 );
+            $binary = [0, 1];
 
             foreach ($binary as $digit) {
                 $top1 = (284517 * $m1 - 94839 * $m3) * $sub2;
                 $top2 = (838422 * $m3 + 769860 * $m2 + 731718 * $m1) * $L * $sub2 - 769860 * $digit * $L;
                 $bottom = (632260 * $m3 - 126452 * $m2) * $sub2 + 126452 * $digit;
 
-                $ret[] = array( $top1 / $bottom, $top2 / $bottom );
+                $ret[] = [$top1/$bottom, $top2/$bottom];
             }
         }
 
@@ -132,7 +132,7 @@ class HUSL
      */
     private static function maxSafeChromaForL($L)
     {
-        $lengths = array();
+        $lengths = [];
         $iterable = self::getBounds($L);
         for ($i = 0; $i < count($iterable); $i++) {
             // x where line intersects with perpendicular running though (0, 0)
@@ -156,7 +156,7 @@ class HUSL
     private static function maxChromaForLH($L, $H)
     {
         $hrad = $H / 360 * M_PI * 2;
-        $lengths = array();
+        $lengths = [];
         $iterable = self::getBounds($L);
         for ($i = 0; $i < count($iterable); $i++) {
             $line = $iterable[$i];
@@ -204,7 +204,7 @@ class HUSL
         $G = self::fromLinear(self::dotProduct(self::M['G'], $tuple));
         $B = self::fromLinear(self::dotProduct(self::M['B'], $tuple));
 
-        return array( $R, $G, $B );
+        return [$R, $G, $B];
     }
 
     public static function rgbToXyz($tuple)
@@ -213,13 +213,13 @@ class HUSL
         $G = $tuple[1];
         $B = $tuple[2];
 
-        $rgbl = array( self::toLinear($R), self::toLinear($G), self::toLinear($B) );
+        $rgbl = [self::toLinear($R), self::toLinear($G), self::toLinear($B)];
 
         $X = self::dotProduct(self::M_INV['X'], $rgbl);
         $Y = self::dotProduct(self::M_INV['Y'], $rgbl);
         $Z = self::dotProduct(self::M_INV['Z'], $rgbl);
 
-        $XYZ = array( $X, $Y, $Z );
+        $XYZ = [$X, $Y, $Z];
 
         return $XYZ;
     }
@@ -260,7 +260,7 @@ class HUSL
         // Black will create a divide-by-zero error in
         // the following two lines
         if ($Y == 0) {
-            return array( 0, 0, 0 );
+            return [0, 0, 0];
         }
 
         $L = self::Y_to_L($Y);
@@ -269,7 +269,7 @@ class HUSL
         $U = 13 * $L * ($varU - self::REF_U);
         $V = 13 * $L * ($varV - self::REF_V);
 
-        return array( $L, $U, $V );
+        return [$L, $U, $V];
     }
 
     public static function luvToXyz($tuple)
@@ -280,7 +280,7 @@ class HUSL
         // Black will create a divide-by-zero error
 
         if ($L == 0) {
-            return array( 0, 0, 0 );
+            return [0, 0, 0];
         }
 
         $varU = $U / (13 * $L) + self::REF_U;
@@ -289,7 +289,7 @@ class HUSL
         $X = 0 - 9 * $Y * $varU / (($varU - 4) * $varV - $varU * $varV);
         $Z = (9 * $Y - 15 * $varV * $Y - $varV * $X) / (3 * $varV);
 
-        return array( $X, $Y, $Z );
+        return [$X, $Y, $Z];
     }
 
     public static function luvToLch($tuple)
@@ -310,7 +310,7 @@ class HUSL
             }
         }
 
-        return array( $L, $C, $H );
+        return [$L, $C, $H];
     }
 
     public static function lchToLuv($tuple)
@@ -322,7 +322,7 @@ class HUSL
         $U = cos($Hrad) * $C;
         $V = sin($Hrad) * $C;
 
-        return array( $L, $U, $V );
+        return [$L, $U, $V];
     }
 
     public static function huslToLch($tuple)
@@ -339,7 +339,7 @@ class HUSL
             $C = $max / 100 * $S;
         }
 
-        return array( $L, $C, $H );
+        return [$L, $C, $H];
     }
 
     public static function lchToHusl($tuple)
@@ -356,7 +356,7 @@ class HUSL
             $S = $C / $max * 100;
         }
 
-        return array( $H, $S, $L );
+        return [$H, $S, $L];
     }
 
     //# PASTEL HUSL
@@ -374,7 +374,7 @@ class HUSL
             $C = $max / 100 * $S;
         }
 
-        return array( $L, $C, $H );
+        return [$L, $C, $H];
     }
 
     public static function lchToHuslp($tuple)
@@ -391,7 +391,7 @@ class HUSL
             $S = $C / $max * 100;
         }
 
-        return array( $H, $S, $L );
+        return [$H, $S, $L];
     }
 
     // From https://gist.github.com/Pushplaybang/5432844
@@ -422,7 +422,7 @@ class HUSL
             $g = hexdec(substr($hex, 2, 2));
             $b = hexdec(substr($hex, 4, 2));
         }
-        $rgb = array( $r / 255.0, $g / 255.0, $b / 255.0 );
+        $rgb = [$r/255.0, $g/255.0, $b/255.0];
 
         return $rgb; // returns an array with the rgb values
     }
@@ -480,7 +480,6 @@ class HUSL
     public static function fromRgbInt()
     {
         $rgb_255 = self::componentsToTuple(func_get_args());
-        $rgb = array();
         $rgb = array_map(function ($val) {
             return $val / 255.0;
         }, $rgb_255);
@@ -504,7 +503,6 @@ class HUSL
     {
         $husl = self::componentsToTuple(func_get_args());
         $rgb = self::huslToRgb($husl);
-        $rgb_255 = array();
         $rgb_255 = array_map(function ($val) {
             return intval(round($val * 255.0));
         }, $rgb);
@@ -551,7 +549,7 @@ class HUSL
         if (is_array($components[0])) {
             return $components[0];
         } else {
-            return array( $components[0], $components[1], $components[2] );
+            return [$components[0], $components[1], $components[2]];
         }
     }
 }
