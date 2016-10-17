@@ -3,7 +3,7 @@
   "type": "library",
   "description": "HUSL / rgb / hex color conversion library",
   "keywords": ["HUSL","color"],
-  "homepage": "https://github.com/carloscabo/husl-php-class",
+  "homepage": "https://github.com/husl-colors/husl-php",
   "minimum-stability": "dev",
   "authors": [
     {
