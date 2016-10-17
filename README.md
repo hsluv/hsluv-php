@@ -1,8 +1,8 @@
-# husl-php-class
+# husl-php
 
 [![Build Status](https://travis-ci.org/husl-colors/husl-php.svg?branch=master)](https://travis-ci.org/husl-colors/husl-php)
 
-A port to PHP (5.6+) from Python / JS of [HUSL](http://www.husl-colors.org/) (revision 3) .
+Port to PHP (5.6+) from Python / JS of [HUSL](http://www.husl-colors.org/) (revision 4).
 
 To run the tests:
 ```
