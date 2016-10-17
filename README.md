@@ -1,6 +1,6 @@
 # husl-php-class
 
-[![Build Status](https://travis-ci.org/carloscabo/husl-php-class.svg?branch=master)](https://travis-ci.org/carloscabo/husl-php-class)
+[![Build Status](https://travis-ci.org/husl-colors/husl-php.svg?branch=master)](https://travis-ci.org/husl-colors/husl-php)
 
 A port to PHP (5.6+) from Python / JS of [HUSL](http://www.husl-colors.org/) (revision 3) .
 
