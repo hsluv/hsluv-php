@@ -11,6 +11,12 @@
       "email": "carloscabo@gmail.com",
       "homepage": "http://carloscabo.com",
       "role": "Developer"
+    },
+    {
+      "name": "Manuel Gómez",
+      "email": "mgdepoo@gmail.com",
+      "homepage": "http://github.com/codewrong",
+      "role": "Developer"
     }
   ],
   "license": "MIT",
