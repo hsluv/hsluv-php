@@ -2,7 +2,7 @@
 
 [![Build Status](https://travis-ci.org/husl-colors/husl-php.svg?branch=master)](https://travis-ci.org/husl-colors/husl-php)
 
-Port to PHP (5.6+) from Python / JS of [HUSL](http://www.husl-colors.org/) (revision 4).
+Port to PHP (5.6+) from Python / JS of [HSLuv](http://www.hsluv.org/) (revision 4).
 
 To run the tests:
 ```
