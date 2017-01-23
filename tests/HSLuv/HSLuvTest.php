@@ -30,14 +30,16 @@ class HSLuvTest extends TestCase
     public function correctHSLuvFromRgb()
     {
         foreach ($this->battery as $hex => $values) {
-            $this->assertEquals(
-                HSLuv::fromRgb(
-                    $values['rgb'][0],
-                    $values['rgb'][1],
-                    $values['rgb'][2]
-                ),
-                $values['hsluv']
-            );
+            if (array_key_exists('hsluv', $values)) {
+                $this->assertEquals(
+                    HSLuv::fromRgb(
+                        $values['rgb'][0],
+                        $values['rgb'][1],
+                        $values['rgb'][2]
+                    ),
+                    $values['hsluv']
+                );
+            }
         }
     }
 
@@ -47,7 +49,9 @@ class HSLuvTest extends TestCase
     public function correctHSLuvFromHex()
     {
         foreach ($this->battery as $hex => $values) {
-            $this->assertEquals(HSLuv::fromHex($hex), $values['hsluv']);
+            if (array_key_exists('hsluv', $values)) {
+                $this->assertEquals(HSLuv::fromHex($hex), $values['hsluv']);
+            }
         }
     }
 
@@ -57,7 +61,9 @@ class HSLuvTest extends TestCase
     public function correctRgbFromHSLuv()
     {
         foreach ($this->battery as $hex => $values) {
-            $this->assertEquals(HSLuv::toRgb($values['hsluv']), $values['rgb']);
+            if (array_key_exists('hsluv', $values)) {
+                $this->assertEquals(HSLuv::toRgb($values['hsluv']), $values['rgb']);
+            }
         }
     }
 
@@ -67,7 +73,9 @@ class HSLuvTest extends TestCase
     public function correctHexFromHSLuv()
     {
         foreach ($this->battery as $hex => $values) {
-            $this->assertEquals(HSLuv::toHex($values['hsluv']), $hex);
+            if (array_key_exists('hsluv', $values)) {
+                $this->assertEquals(HSLuv::toHex($values['hsluv']), $hex);
+            }
         }
     }
 
