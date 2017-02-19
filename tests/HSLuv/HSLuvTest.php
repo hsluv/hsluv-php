@@ -24,22 +24,30 @@ class HSLuvTest extends TestCase
         $this->fabadaHexFloats = [250.0, 186.0, 218.0];
     }
 
+    public function assertFloatClose($float1, $float2) {
+        assert(abs($float1 - $float2) < 0.000000001);
+    }
+
+    public function assertTupleClose($tuple1, $tuple2) {
+        $this->assertFloatClose($tuple1[0], $tuple2[0]);
+        $this->assertFloatClose($tuple1[1], $tuple2[1]);
+        $this->assertFloatClose($tuple1[2], $tuple2[2]);
+    }
+
     /**
      * @test
      */
     public function correctHSLuvFromRgb()
     {
         foreach ($this->battery as $hex => $values) {
-            if (array_key_exists('hsluv', $values)) {
-                $this->assertEquals(
-                    HSLuv::fromRgb(
-                        $values['rgb'][0],
-                        $values['rgb'][1],
-                        $values['rgb'][2]
-                    ),
-                    $values['hsluv']
-                );
-            }
+            $this->assertTupleClose(
+                HSLuv::fromRgb(
+                    $values['rgb'][0],
+                    $values['rgb'][1],
+                    $values['rgb'][2]
+                ),
+                $values['hsluv']
+            );
         }
     }
 
@@ -49,9 +57,7 @@ class HSLuvTest extends TestCase
     public function correctHSLuvFromHex()
     {
         foreach ($this->battery as $hex => $values) {
-            if (array_key_exists('hsluv', $values)) {
-                $this->assertEquals(HSLuv::fromHex($hex), $values['hsluv']);
-            }
+            $this->assertTupleClose(HSLuv::fromHex($hex), $values['hsluv']);
         }
     }
 
@@ -61,9 +67,7 @@ class HSLuvTest extends TestCase
     public function correctRgbFromHSLuv()
     {
         foreach ($this->battery as $hex => $values) {
-            if (array_key_exists('hsluv', $values)) {
-                $this->assertEquals(HSLuv::toRgb($values['hsluv']), $values['rgb']);
-            }
+            $this->assertTupleClose(HSLuv::toRgb($values['hsluv']), $values['rgb']);
         }
     }
 
@@ -73,9 +77,7 @@ class HSLuvTest extends TestCase
     public function correctHexFromHSLuv()
     {
         foreach ($this->battery as $hex => $values) {
-            if (array_key_exists('hsluv', $values)) {
-                $this->assertEquals(HSLuv::toHex($values['hsluv']), $hex);
-            }
+            $this->assertEquals(HSLuv::toHex($values['hsluv']), $hex);
         }
     }
 
@@ -92,7 +94,7 @@ class HSLuvTest extends TestCase
      */
     public function fabadaToupper()
     {
-        $this->assertEquals(HSLuv::fromHex(strtoupper($this->fabadaHex)), $this->fabadaHSLuv);
+        $this->assertTupleClose(HSLuv::fromHex(strtoupper($this->fabadaHex)), $this->fabadaHSLuv);
     }
 
     /**
@@ -115,7 +117,7 @@ class HSLuvTest extends TestCase
      */
     public function fabadaFromRgbArray()
     {
-        $this->assertEquals(HSLuv::fromRgb($this->fabadaRgb), $this->fabadaHSLuv);
+        $this->assertTupleClose(HSLuv::fromRgb($this->fabadaRgb), $this->fabadaHSLuv);
     }
 
     /**
@@ -123,7 +125,7 @@ class HSLuvTest extends TestCase
      */
     public function fabadaFromRgbFloats()
     {
-        $this->assertEquals(
+        $this->assertTupleClose(
             HSLuv::fromRgbInt(
                 $this->fabadaHexFloats[0],
                 $this->fabadaHexFloats[1],
@@ -138,7 +140,7 @@ class HSLuvTest extends TestCase
      */
     public function fabadaFromRgbFloatsArray()
     {
-        $this->assertEquals(HSLuv::fromRgbInt($this->fabadaHexFloats), $this->fabadaHSLuv);
+        $this->assertTupleClose(HSLuv::fromRgbInt($this->fabadaHexFloats), $this->fabadaHSLuv);
     }
 
     /**
@@ -146,7 +148,7 @@ class HSLuvTest extends TestCase
      */
     public function fabadaFromRgbInts()
     {
-        $this->assertEquals(
+        $this->assertTupleClose(
             HSLuv::fromRgbInt(
                 $this->fabadaHexInts[0],
                 $this->fabadaHexInts[1],
@@ -161,7 +163,7 @@ class HSLuvTest extends TestCase
      */
     public function fabadaFromRgbIntsArray()
     {
-        $this->assertEquals(HSLuv::fromRgbInt($this->fabadaHexInts), $this->fabadaHSLuv);
+        $this->assertTupleClose(HSLuv::fromRgbInt($this->fabadaHexInts), $this->fabadaHSLuv);
     }
 
     /**
@@ -169,7 +171,7 @@ class HSLuvTest extends TestCase
      */
     public function fabadaRgbFromHSLuvArray()
     {
-        $this->assertEquals(HSLuv::toRgb($this->fabadaHSLuv), $this->fabadaRgb);
+        $this->assertTupleClose(HSLuv::toRgb($this->fabadaHSLuv), $this->fabadaRgb);
     }
 
     /**
@@ -177,7 +179,7 @@ class HSLuvTest extends TestCase
      */
     public function fabadaRgbFromHSLuv()
     {
-        $this->assertEquals(
+        $this->assertTupleClose(
             HSLuv::toRgb(
                 $this->fabadaHSLuv[0],
                 $this->fabadaHSLuv[1],
