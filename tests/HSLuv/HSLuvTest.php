@@ -3,7 +3,7 @@
 use PHPUnit\Framework\TestCase;
 use HSLuv\HSLuv;
 
-class HSLuvTest extends TestCase
+class hsluvTest extends TestCase
 {
     protected $battery = [];
     protected $fabadaHSLuv = [];
@@ -64,7 +64,7 @@ class HSLuvTest extends TestCase
     /**
      * @test
      */
-    public function correctRgbFromHSLuv()
+    public function correctRgbFromHsluv()
     {
         foreach ($this->battery as $hex => $values) {
             $this->assertTupleClose(HSLuv::toRgb($values['hsluv']), $values['rgb']);
@@ -74,7 +74,7 @@ class HSLuvTest extends TestCase
     /**
      * @test
      */
-    public function correctHexFromHSLuv()
+    public function correctHexFromHsluv()
     {
         foreach ($this->battery as $hex => $values) {
             $this->assertEquals(HSLuv::toHex($values['hsluv']), $hex);
@@ -177,7 +177,7 @@ class HSLuvTest extends TestCase
     /**
      * @test
      */
-    public function fabadaRgbFromHSLuv()
+    public function fabadaRgbFromHsluv()
     {
         $this->assertTupleClose(
             HSLuv::toRgb(
@@ -192,7 +192,7 @@ class HSLuvTest extends TestCase
     /**
      * @test
      */
-    public function fabadaHexIntFromHSLuv()
+    public function fabadaHexIntFromHsluv()
     {
         $this->assertEquals(
             HSLuv::toHex(
@@ -230,7 +230,7 @@ class HSLuvTest extends TestCase
     /**
      * @test
      */
-    public function fabadaHexFromHSLuv()
+    public function fabadaHexFromHsluv()
     {
         $this->assertEquals(HSLuv::toHex($this->fabadaHSLuv), $this->fabadaHex);
     }
