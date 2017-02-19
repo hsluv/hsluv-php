@@ -1,6 +1,6 @@
 # HSLuv-php
 
-[![Build Status](https://travis-ci.org/HSLuv-colors/HSLuv-php.svg?branch=master)](https://travis-ci.org/HSLuv-colors/HSLuv-php)
+[![Build Status](https://travis-ci.org/hsluv/hsluv-php.svg?branch=master)](https://travis-ci.org/hsluv/hsluv-php)
 
 Port to PHP (5.6+) from Python / JS of [HSLuv](http://www.hsluv.org/) (revision 4).
 
@@ -36,7 +36,7 @@ $out = HSLuv::fromRgbInt( array( 250.0, 186.0, 218.0 ) );
 
 Returns HSLuv an array of **float** values ( H, S, L ).
 
-# From HSLuv to rgb / hex
+# From HSLuv to RGB / hex
 
 Parameters are float H, S, L componets or an array.
 
