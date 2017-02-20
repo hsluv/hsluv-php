@@ -1,12 +1,12 @@
 <?php
 
 use PHPUnit\Framework\TestCase;
-use HUSL\HUSL;
+use HSLuv\HSLuv;
 
-class HUSLTest extends TestCase
+class hsluvTest extends TestCase
 {
     protected $battery = [];
-    protected $fabadaHusl = [];
+    protected $fabadaHSLuv = [];
     protected $fabadaRgb = [];
     protected $fabadaHex;
     protected $fabadaHexInts = [];
@@ -17,26 +17,36 @@ class HUSLTest extends TestCase
         $str = file_get_contents('tests/snapshot-rev4.json');
         $json = json_decode($str, true);
         $this->battery = $json;
-        $this->fabadaHusl = [336.87558941192, 89.200531317385, 82.112136084095];
+        $this->fabadaHSLuv = [336.87558941192, 89.200531317385, 82.112136084095];
         $this->fabadaRgb = [0.98039215686274, 0.72941176470589, 0.85490196078433];
         $this->fabadaHex = '#fabada';
         $this->fabadaHexInts = [250, 186, 218];
         $this->fabadaHexFloats = [250.0, 186.0, 218.0];
     }
 
+    public function assertFloatClose($float1, $float2) {
+        assert(abs($float1 - $float2) < 0.000000001);
+    }
+
+    public function assertTupleClose($tuple1, $tuple2) {
+        $this->assertFloatClose($tuple1[0], $tuple2[0]);
+        $this->assertFloatClose($tuple1[1], $tuple2[1]);
+        $this->assertFloatClose($tuple1[2], $tuple2[2]);
+    }
+
     /**
      * @test
      */
-    public function correctHuslFromRgb()
+    public function correctHSLuvFromRgb()
     {
         foreach ($this->battery as $hex => $values) {
-            $this->assertEquals(
-                HUSL::fromRgb(
+            $this->assertTupleClose(
+                HSLuv::fromRgb(
                     $values['rgb'][0],
                     $values['rgb'][1],
                     $values['rgb'][2]
                 ),
-                $values['husl']
+                $values['hsluv']
             );
         }
     }
@@ -44,30 +54,30 @@ class HUSLTest extends TestCase
     /**
      * @test
      */
-    public function correctHuslFromHex()
+    public function correctHSLuvFromHex()
     {
         foreach ($this->battery as $hex => $values) {
-            $this->assertEquals(HUSL::fromHex($hex), $values['husl']);
+            $this->assertTupleClose(HSLuv::fromHex($hex), $values['hsluv']);
         }
     }
 
     /**
      * @test
      */
-    public function correctRgbFromHusl()
+    public function correctRgbFromHsluv()
     {
         foreach ($this->battery as $hex => $values) {
-            $this->assertEquals(HUSL::toRgb($values['husl']), $values['rgb']);
+            $this->assertTupleClose(HSLuv::toRgb($values['hsluv']), $values['rgb']);
         }
     }
 
     /**
      * @test
      */
-    public function correctHexFromHusl()
+    public function correctHexFromHsluv()
     {
         foreach ($this->battery as $hex => $values) {
-            $this->assertEquals(HUSL::toHex($values['husl']), $hex);
+            $this->assertEquals(HSLuv::toHex($values['hsluv']), $hex);
         }
     }
 
@@ -76,7 +86,7 @@ class HUSLTest extends TestCase
      */
     public function fabadaTolower()
     {
-        $this->assertEquals(HUSL::fromHex($this->fabadaHex), $this->fabadaHusl);
+        $this->assertEquals(HSLuv::fromHex($this->fabadaHex), $this->fabadaHSLuv);
     }
 
     /**
@@ -84,7 +94,7 @@ class HUSLTest extends TestCase
      */
     public function fabadaToupper()
     {
-        $this->assertEquals(HUSL::fromHex(strtoupper($this->fabadaHex)), $this->fabadaHusl);
+        $this->assertTupleClose(HSLuv::fromHex(strtoupper($this->fabadaHex)), $this->fabadaHSLuv);
     }
 
     /**
@@ -93,12 +103,12 @@ class HUSLTest extends TestCase
     public function fabadaFromRgb()
     {
         $this->assertEquals(
-            HUSL::fromRgb(
+            HSLuv::fromRgb(
                 $this->fabadaRgb[0],
                 $this->fabadaRgb[1],
                 $this->fabadaRgb[2]
             ),
-            $this->fabadaHusl
+            $this->fabadaHSLuv
         );
     }
 
@@ -107,7 +117,7 @@ class HUSLTest extends TestCase
      */
     public function fabadaFromRgbArray()
     {
-        $this->assertEquals(HUSL::fromRgb($this->fabadaRgb), $this->fabadaHusl);
+        $this->assertTupleClose(HSLuv::fromRgb($this->fabadaRgb), $this->fabadaHSLuv);
     }
 
     /**
@@ -115,13 +125,13 @@ class HUSLTest extends TestCase
      */
     public function fabadaFromRgbFloats()
     {
-        $this->assertEquals(
-            HUSL::fromRgbInt(
+        $this->assertTupleClose(
+            HSLuv::fromRgbInt(
                 $this->fabadaHexFloats[0],
                 $this->fabadaHexFloats[1],
                 $this->fabadaHexFloats[2]
             ),
-            $this->fabadaHusl
+            $this->fabadaHSLuv
         );
     }
 
@@ -130,7 +140,7 @@ class HUSLTest extends TestCase
      */
     public function fabadaFromRgbFloatsArray()
     {
-        $this->assertEquals(HUSL::fromRgbInt($this->fabadaHexFloats), $this->fabadaHusl);
+        $this->assertTupleClose(HSLuv::fromRgbInt($this->fabadaHexFloats), $this->fabadaHSLuv);
     }
 
     /**
@@ -138,13 +148,13 @@ class HUSLTest extends TestCase
      */
     public function fabadaFromRgbInts()
     {
-        $this->assertEquals(
-            HUSL::fromRgbInt(
+        $this->assertTupleClose(
+            HSLuv::fromRgbInt(
                 $this->fabadaHexInts[0],
                 $this->fabadaHexInts[1],
                 $this->fabadaHexInts[2]
             ),
-            $this->fabadaHusl
+            $this->fabadaHSLuv
         );
     }
 
@@ -153,27 +163,27 @@ class HUSLTest extends TestCase
      */
     public function fabadaFromRgbIntsArray()
     {
-        $this->assertEquals(HUSL::fromRgbInt($this->fabadaHexInts), $this->fabadaHusl);
+        $this->assertTupleClose(HSLuv::fromRgbInt($this->fabadaHexInts), $this->fabadaHSLuv);
     }
 
     /**
      * @test
      */
-    public function fabadaRgbFromHuslArray()
+    public function fabadaRgbFromHSLuvArray()
     {
-        $this->assertEquals(HUSL::toRgb($this->fabadaHusl), $this->fabadaRgb);
+        $this->assertTupleClose(HSLuv::toRgb($this->fabadaHSLuv), $this->fabadaRgb);
     }
 
     /**
      * @test
      */
-    public function fabadaRgbFromHusl()
+    public function fabadaRgbFromHsluv()
     {
-        $this->assertEquals(
-            HUSL::toRgb(
-                $this->fabadaHusl[0],
-                $this->fabadaHusl[1],
-                $this->fabadaHusl[2]
+        $this->assertTupleClose(
+            HSLuv::toRgb(
+                $this->fabadaHSLuv[0],
+                $this->fabadaHSLuv[1],
+                $this->fabadaHSLuv[2]
             ),
             $this->fabadaRgb
         );
@@ -182,13 +192,13 @@ class HUSLTest extends TestCase
     /**
      * @test
      */
-    public function fabadaHexIntFromHusl()
+    public function fabadaHexIntFromHsluv()
     {
         $this->assertEquals(
-            HUSL::toHex(
-                $this->fabadaHusl[0],
-                $this->fabadaHusl[1],
-                $this->fabadaHusl[2]
+            HSLuv::toHex(
+                $this->fabadaHSLuv[0],
+                $this->fabadaHSLuv[1],
+                $this->fabadaHSLuv[2]
             ),
             $this->fabadaHex
         );
@@ -197,21 +207,21 @@ class HUSLTest extends TestCase
     /**
      * @test
      */
-    public function fabadaHexIntFromHuslArray()
+    public function fabadaHexIntFromHSLuvArray()
     {
-        $this->assertEquals(HUSL::toHex($this->fabadaHusl), $this->fabadaHex);
+        $this->assertEquals(HSLuv::toHex($this->fabadaHSLuv), $this->fabadaHex);
     }
 
     /**
      * @test
      */
-    public function fabadaHexFromHuslArray()
+    public function fabadaHexFromHSLuvArray()
     {
         $this->assertEquals(
-            HUSL::toHex(
-                $this->fabadaHusl[0],
-                $this->fabadaHusl[1],
-                $this->fabadaHusl[2]
+            HSLuv::toHex(
+                $this->fabadaHSLuv[0],
+                $this->fabadaHSLuv[1],
+                $this->fabadaHSLuv[2]
             ),
             $this->fabadaHex
         );
@@ -220,16 +230,16 @@ class HUSLTest extends TestCase
     /**
      * @test
      */
-    public function fabadaHexFromHusl()
+    public function fabadaHexFromHsluv()
     {
-        $this->assertEquals(HUSL::toHex($this->fabadaHusl), $this->fabadaHex);
+        $this->assertEquals(HSLuv::toHex($this->fabadaHSLuv), $this->fabadaHex);
     }
 
     protected function tearDown()
     {
         parent::tearDown();
         $this->battery = [];
-        $this->fabadaHusl = [];
+        $this->fabadaHSLuv = [];
         $this->fabadaRgb = [];
         $this->fabadaHex = null;
         $this->fabadaHexInts = [];

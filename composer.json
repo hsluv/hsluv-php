@@ -1,9 +1,9 @@
 {
-  "name": "carloscabo/husl",
+  "name": "carloscabo/HSLuv",
   "type": "library",
-  "description": "HUSL / rgb / hex color conversion library",
-  "keywords": ["HUSL","color"],
-  "homepage": "https://github.com/husl-colors/husl-php",
+  "description": "HSLuv / rgb / hex color conversion library",
+  "keywords": ["HSLuv","color"],
+  "homepage": "https://github.com/hsluv/hsluv-php",
   "minimum-stability": "dev",
   "authors": [
     {
@@ -22,7 +22,7 @@
   "license": "MIT",
   "autoload": {
     "psr-4": {
-      "HUSL\\": "src/HUSL"
+      "HSLuv\\": "src/HSLuv"
     }
   },
   "require-dev": {

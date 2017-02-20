@@ -1,10 +1,10 @@
 <?php
 
-namespace HUSL;
+namespace HSLuv;
 
 /**
-  Port of HUSL Color library to PHP by Carlos Cabo. V.1.0.0
-  Original by Alexei Boronine. https://github.com/husl-colors
+  Port of HSLuv Color library to PHP by Carlos Cabo. V.2.0.0
+  Original by Alexei Boronine. https://github.com/hsluv
 
   The math for most of this module was taken from:
 
@@ -23,7 +23,7 @@ namespace HUSL;
   Source: https://en.wikipedia.org/wiki/Double-precision_floating-point_format
 */
 
-class HUSL
+class HSLuv
 {
     const M = [
         'R' => [3.2409699419045214, -1.5373831775700935, -0.49861076029300328],
@@ -325,7 +325,7 @@ class HUSL
         return [$L, $U, $V];
     }
 
-    public static function huslToLch($tuple)
+    public static function hsluvToLch($tuple)
     {
         $H = $tuple[0];
         $S = $tuple[1];
@@ -342,7 +342,7 @@ class HUSL
         return [$L, $C, $H];
     }
 
-    public static function lchToHusl($tuple)
+    public static function lchToHsluv($tuple)
     {
         $L = $tuple[0];
         $C = $tuple[1];
@@ -359,8 +359,8 @@ class HUSL
         return [$H, $S, $L];
     }
 
-    //# PASTEL HUSL
-    public static function huslpToLch($tuple)
+    //# PASTEL HSLuv
+    public static function hpluvToLch($tuple)
     {
         $H = $tuple[0];
         $S = $tuple[1];
@@ -377,7 +377,7 @@ class HUSL
         return [$L, $C, $H];
     }
 
-    public static function lchToHuslp($tuple)
+    public static function lchToHpluv($tuple)
     {
         $L = $tuple[0];
         $C = $tuple[1];
@@ -443,38 +443,38 @@ class HUSL
         return self::luvToLch(self::xyzToLuv(self::rgbToXyz($tuple)));
     }
 
-    public static function huslToRgb()
+    public static function hsluvToRgb()
     {
         $tuple = self::componentsToTuple(func_get_args());
 
-        return self::lchToRgb(self::huslToLch($tuple));
+        return self::lchToRgb(self::hsluvToLch($tuple));
     }
 
-    public static function rgbToHusl()
+    public static function rgbToHsluv()
     {
         $tuple = self::componentsToTuple(func_get_args());
 
-        return self::lchToHusl(self::rgbToLch($tuple));
+        return self::lchToHsluv(self::rgbToLch($tuple));
     }
 
-    public static function huslpToRgb()
+    public static function hpluvToRgb()
     {
         $tuple = self::componentsToTuple(func_get_args());
 
-        return self::lchToRgb(self::huslpToLch($tuple));
+        return self::lchToRgb(self::hpluvToLch($tuple));
     }
 
-    public static function rgbToHuslp()
+    public static function rgbToHpluv()
     {
         $tuple = self::componentsToTuple(func_get_args());
 
-        return self::lchToHuslp(self::rgbToLch($tuple));
+        return self::lchToHpluv(self::rgbToLch($tuple));
     }
 
     public static function fromRgb()
     {
         $rgb = self::componentsToTuple(func_get_args());
-        return self::rgbToHusl($rgb);
+        return self::rgbToHsluv($rgb);
     }
 
     public static function fromRgbInt()
@@ -483,26 +483,26 @@ class HUSL
         $rgb = array_map(function ($val) {
             return $val / 255.0;
         }, $rgb_255);
-        return self::rgbToHusl($rgb);
+        return self::rgbToHsluv($rgb);
     }
 
     public static function fromHex($hex)
     {
-        return self::rgbToHusl(self::hexToRgb($hex));
+        return self::rgbToHsluv(self::hexToRgb($hex));
     }
 
     public static function toRgb()
     {
-        $husl = self::componentsToTuple(func_get_args());
-        $rgb = self::huslToRgb($husl);
+        $HSLuv = self::componentsToTuple(func_get_args());
+        $rgb = self::hsluvToRgb($HSLuv);
 
         return $rgb;
     }
 
     public static function toRgbInt()
     {
-        $husl = self::componentsToTuple(func_get_args());
-        $rgb = self::huslToRgb($husl);
+        $HSLuv = self::componentsToTuple(func_get_args());
+        $rgb = self::hsluvToRgb($HSLuv);
         $rgb_255 = array_map(function ($val) {
             return intval(round($val * 255.0));
         }, $rgb);
@@ -512,35 +512,35 @@ class HUSL
 
     public static function toHex()
     {
-        $husl = self::componentsToTuple(func_get_args());
+        $HSLuv = self::componentsToTuple(func_get_args());
 
-        return self::rgbToHex(self::huslToRgb($husl));
+        return self::rgbToHex(self::hsluvToRgb($HSLuv));
     }
 
     public static function p_toRgb()
     {
-        $husl = self::componentsToTuple(func_get_args());
+        $HSLuv = self::componentsToTuple(func_get_args());
 
-        return self::xyzToRgb(self::luvToXyz(self::lchToLuv(self::huslpToLch($husl))));
+        return self::xyzToRgb(self::luvToXyz(self::lchToLuv(self::hpluvToLch($HSLuv))));
     }
 
     public static function p_toHex()
     {
-        $husl = self::componentsToTuple(func_get_args());
+        $HSLuv = self::componentsToTuple(func_get_args());
 
-        return self::rgbToHex(self::xyzToRgb(self::luvToXyz(self::lchToLuv(self::huslpToLch($husl)))));
+        return self::rgbToHex(self::xyzToRgb(self::luvToXyz(self::lchToLuv(self::hpluvToLch($HSLuv)))));
     }
 
     public static function p_fromRgb()
     {
         $rgb = self::componentsToTuple(func_get_args());
 
-        return self::lchToHuslp(self::luvToLch(self::xyzToLuv(self::rgbToXyz($rgb))));
+        return self::lchToHpluv(self::luvToLch(self::xyzToLuv(self::rgbToXyz($rgb))));
     }
 
     public static function p_fromHex($hex)
     {
-        return self::lchToHuslp(self::luvToLch(self::xyzToLuv(self::rgbToXyz(self::hexToRgb($hex)))));
+        return self::lchToHpluv(self::luvToLch(self::xyzToLuv(self::rgbToXyz(self::hexToRgb($hex)))));
     }
 
     // Convert multiple components into an array
