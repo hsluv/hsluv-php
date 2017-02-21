@@ -16,18 +16,18 @@ composer install
 composer require "carloscabo/HSLuv"
 ```
 
-# From rgb / hex to HSLuv
+# From RGB / hex to HSLuv
 
 ````php
 // From hex upper / lowercase
 $out = HSLuv::fromHex( '#fabada' );
 $out = HSLuv::fromHex( '#FABADA' );
 
-// From rgb (float) in 0.0 - 1.0 range
+// From RGB (float) in 0.0 - 1.0 range
 $out = HSLuv::fromRgb( 0.9803921568627451, 0.7294117647058823, 0.8549019607843137 );
 $out = HSLuv::fromRgb( array( 0.9803921568627451, 0.7294117647058823, 0.8549019607843137 ) );
 
-// From rgb (int) in 0 - 255 range
+// From RGB (int) in 0 - 255 range
 $out = HSLuv::fromRgbInt( 250, 186, 218 );
 $out = HSLuv::fromRgbInt( 250.0, 186.0, 218.0 );
 $out = HSLuv::fromRgbInt( array( 250, 186, 218 ) );
