@@ -1,7 +1,7 @@
 {
-  "name": "carloscabo/HSLuv",
+  "name": "hsluv/hsluv",
   "type": "library",
-  "description": "HSLuv / rgb / hex color conversion library",
+  "description": "HSLuv / RGB / hex color conversion library",
   "keywords": ["HSLuv","color"],
   "homepage": "https://github.com/hsluv/hsluv-php",
   "minimum-stability": "dev",
