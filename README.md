@@ -57,5 +57,5 @@ $out = HSLuv::toRgb( array( $h, $s, $l ) )
 # Authors
 
 - Port by Carlos Cabo ([carloscabo](https://github.com/carloscabo))
-- Support with tests and packaging ([mgthepooh](https://github.com/mgthepooh))
+- Support with tests and packaging ([tasugo](https://github.com/tasugo))
 - Original HSLuv author: Alexei Boronine ([boronine](http://github.com/boronine))
