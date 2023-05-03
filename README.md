@@ -1,6 +1,6 @@
 # HSLuv-php
 
-[![Build Status](https://travis-ci.org/hsluv/hsluv-php.svg?branch=master)](https://travis-ci.org/hsluv/hsluv-php)
+[![Build Status](https://github.com/hsluv/hsluv-php/actions/workflows/test.yml/badge.svg)](https://github.com/hsluv/hsluv-php/actions/workflows/test.yml)
 
 Port to PHP (5.6+) from Python / JS of [HSLuv](http://www.hsluv.org/) (revision 4).
 
